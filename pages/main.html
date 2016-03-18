@@ -1,4 +1,8 @@
 <h1>This is main</h1>
 <h2 ng-cloak>The name from main Controller is: {{ thename }} </h2>
 
-<search-result person-name="{{ person.name }}" person-address="{{ person.address }}"></search-result>
+<div class="list-group">
+    <search-result person-name="{{ person.name }}" person-address="{{ person.address }}"></search-result>
+    <obj-passing person-object="person"></obj-passing>
+    <access-func people-object = "people" ng-repeat="people in people" formatted-address-function="formatedAddr(apeople)"></access-func>
+</div>

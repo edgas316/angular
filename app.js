@@ -1,6 +1,7 @@
 // MODULE
 var angularApp = angular.module('angularApp', ['ngMessages','ngResource', 'ngRoute']);
 
+// Routing
 angularApp.config(function($routeProvider){
     $routeProvider
         .when('/', {
@@ -17,7 +18,7 @@ angularApp.config(function($routeProvider){
         })
 })
 
-
+// Controller and dependency injection
 angularApp.controller('secondController', ['$scope', '$log', '$routeParams', 'nameService', function($scope, $log, $routeParams, nameService){
     $log.info('Second controller loaded!!!')
     $scope.name = "Marine"
@@ -92,41 +93,70 @@ angularApp.controller('mainController', ['$scope', '$log', '$filter', '$resource
     
 // =================================================  
 // AJAX javascript native code
-    var rulesrequest = new XMLHttpRequest()
-    rulesrequest.onreadystatechange = function(){
-        $scope.$apply(function(){
-            if(rulesrequest.readyState == 4 && rulesrequest.status == 200){
-                $scope.newrules = JSON.parse(rulesrequest.responseText)
-            }
-        })
-    }
-    rulesrequest.open("GET", "/api", true)
-    rulesrequest.send()
+//    var rulesrequest = new XMLHttpRequest()
+//    rulesrequest.onreadystatechange = function(){
+//        $scope.$apply(function(){
+//            if(rulesrequest.readyState == 4 && rulesrequest.status == 200){
+//                $scope.newrules = JSON.parse(rulesrequest.responseText)
+//            }
+//        })
+//    }
+//    rulesrequest.open("GET", "/api", true)
+//    rulesrequest.send()
 // =================================================
 // AJAX in angular way
-    $http.get('/api')
-        .success(function (result) {
-            $scope.rules = result
-        })
-        .error(function(data, status){
-            console.log(data)
-        });
-    
-    $scope.newRule = ''
-    $scope.addRule = function(){
-        $http.post('/api', {newRule:$scope.newRule})
-        .success(function(result){
-            $scope.rules = result;
-            $scope.newRule = ''
-        })
-        .error(function(data, status){
-            console.log(data)
-        })
-    }
+//    $http.get('/api')
+//        .success(function (result) {
+//            $scope.rules = result
+//        })
+//        .error(function(data, status){
+//            console.log(data)
+//        });
+//    
+//    $scope.newRule = ''
+//    $scope.addRule = function(){
+//        $http.post('/api', {newRule:$scope.newRule})
+//        .success(function(result){
+//            $scope.rules = result;
+//            $scope.newRule = ''
+//        })
+//        .error(function(data, status){
+//            console.log(data)
+//        })
+//    }
+// =================================================
 
     $scope.person = {
         name: "Edwin Gasparian",
         address: '123 Main St., New York, NY 111111'
+    }
+    
+    $scope.people = [
+        {
+            name: "Marine Gabrielyan",
+            address: "555 Second St",
+            city:'San-Fran',
+            state: 'CA',
+            zip:'94500'
+        },
+        {
+            name: "David Gasparyan",
+            address: "555 Second St",
+            city:'San-Fran',
+            state: 'CA',
+            zip:'94500'
+        },
+        {
+            name: "Edwin Gasparian",
+            address: "555 Second St",
+            city:'San-Fran',
+            state: 'CA',
+            zip:'94500'
+        }
+    ]
+    
+    $scope.formatedAddr = function(people){
+        return people.address + ', ' + people.city + ', ' + people.state + ', ' + people.zip
     }
     
     
@@ -148,13 +178,37 @@ angularApp.controller('testController', ['$scope', '$log', 'nameService', functi
 // Creating custom directive
 angularApp.directive("searchResult", function(){
     return {
-        restrict:'AECM', // E-Element, A-Atribute, C-Class, M-Comment
+        restrict:'EACM', // E-Element, A-Atribute, C-Class, M-Comment
 //        template: '<div class="list-group"><a href="#" class="list-group-item"><h4 class="list-group-item-heading">List group item heading</h4><p class="list-group-item-text">asdfasdfasdfasdfasdfasdfasdfasdfasdf</p></a></div>',
         templateUrl:'directives/search.html',
         replace: true,
         scope:{
             personName: "@", // '@' = Text
             personAddress:"@"
+        }
+    }
+});
+angularApp.directive("objPassing", function(){
+    return {
+        restrict:'EACM', // E-Element, A-Atribute, C-Class, M-Comment
+//        template: '<div class="list-group"><a href="#" class="list-group-item"><h4 class="list-group-item-heading">List group item heading</h4><p class="list-group-item-text">asdfasdfasdfasdfasdfasdfasdfasdfasdf</p></a></div>',
+        templateUrl:'directives/search.html',
+        replace: true,
+        scope:{
+            personObject: "=" // '=' = two way binding - passing the object
+        }
+    }
+})
+
+angularApp.directive("accessFunc", function(){
+    return {
+        restrict:'EACM', // E-Element, A-Atribute, C-Class, M-Comment
+//        template: '<div class="list-group"><a href="#" class="list-group-item"><h4 class="list-group-item-heading">List group item heading</h4><p class="list-group-item-text">asdfasdfasdfasdfasdfasdfasdfasdfasdf</p></a></div>',
+        templateUrl:'directives/search.html',
+        replace: true,
+        scope:{
+            peopleObject: "=", // '=' = two way binding - passing the object,
+            formattedAddressFunction: "&" // '&' = means it is a function
         }
     }
 })
